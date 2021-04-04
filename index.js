@@ -16,7 +16,7 @@ var definition;
 var config;
 
 function init() {
-  console.log('-- Reading configuration file...');
+  console.log('[init] Reading configuration file...');
 
   // create a config class instance and call the read method
   config = new raspberrycan.Config(CONFIG_PATH);
@@ -27,12 +27,12 @@ function init() {
   let can_definition = config.json.can_definition;
   
   // use fs to get array of files in definitions folder
-  console.log('\n-- Reading can definition files...')
+  console.log('[init] Reading can definition files...')
   let definition_files = fs.readdirSync(DEFINITIONS_PATH);
 
   // iterate through each file and create a CanDefinition instance for each
   definition_files.forEach((file_name) => {
-    console.log(`>>> ${file_name}`)
+    console.log(`- ${file_name}`)
     let path = p.resolve(DEFINITIONS_PATH, file_name); // get full path to file
 
     let definition = new raspberrycan.CanDefinition(path);
@@ -46,7 +46,7 @@ function init() {
 
   // connect to can interface if defined in config
   if (can_interface && definition) {
-    console.log(`-- Connecting to ${can_interface}...`)
+    console.log(`[can] Connecting to ${can_interface}...`)
     can_socket = new raspberrycan.CanSocket(can_interface, definition);
     can_socket.connect();
     /*
@@ -57,7 +57,7 @@ function init() {
 
   // create the websocket server
   // TODO: add config parameter for websocket enabled
-  console.log('-- Creating websocket server...')
+  console.log('[websocket] Creating server...')
   web_socket = new raspberrycan.WebSocketServer();
 
   console.log();
@@ -66,13 +66,27 @@ function init() {
 function start() {
   let port = config.json.port || 8080;
   if (can_socket) {
-    console.log(`CAN socket listening on ${can_socket.interface_name}...`)
+    console.log(`[can] Listening on ${can_socket.interface_name}...`)
     can_socket.listen();
+    
+    can_socket.on('update', (metric) => {
+      if (metric.log) console.log(`[can] ${metric.name} -> ${metric.value}`);
+      if (!web_socket) return;
+
+      web_socket.sendMetrics([metric]);
+    });
   }
   // TODO: create http server and use for websocket and express
   if (web_socket) {
-    console.log(`WEB socket listening on ws://localhost:${port}`)
+    console.log(`[websocket] Listening on ws://localhost:${port}`)
     web_socket.listen(port); 
+
+    web_socket.on('connection', (client) => {
+      if (!can_socket) return;
+
+      let metrics = Object.values(can_socket.metrics);
+      web_socket.sendMetrics(metrics, client);
+    });
   }
 }
 
