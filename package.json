@@ -1,0 +1,43 @@
+{
+  "name": "raspberrycan",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server/dist/index.js",
+  "scripts": {
+    "start": "node server/dist/index.js",
+    "compile-server": "webpack --config ./webpack-server.config.js",
+    "compile-client": "webpack --config ./webpack-client.config.js",
+    "compile-server-watch": "webpack --watch --config ./webpack-server.config.js",
+    "compile-client-watch": "webpack --watch --config ./webpack-client.config.js",
+    "compile": "npm run compile-server && npm run compile-client"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/newhead/RaspberryCAN.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/newhead/RaspberryCAN/issues"
+  },
+  "homepage": "https://github.com/newhead/RaspberryCAN#readme",
+  "devDependencies": {
+    "@types/express": "^4.17.11",
+    "@types/node": "^14.14.37",
+    "css-loader": "^5.2.0",
+    "file-loader": "^6.2.0",
+    "sass": "^1.32.8",
+    "sass-loader": "^11.0.1",
+    "style-loader": "^2.0.0",
+    "ts-loader": "^8.1.0",
+    "typescript": "^4.2.3",
+    "webpack": "^5.30.0",
+    "webpack-cli": "^4.6.0",
+    "webpack-node-externals": "^2.5.2"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "pug": "^3.0.2",
+    "typeface-roboto": "^1.1.13"
+  }
+}
