@@ -72,7 +72,10 @@ module.exports = {
         {
           id: 9,
           name: 'charging',
-          process: (buf) => (buf[6] & 0x80) >> 7
+          process: (buf) => {
+            console.log(buf[6].toString(2));
+            return (buf[6] & 0x40) >> 6
+          }
         }
       ]
     },
