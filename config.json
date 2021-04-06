@@ -1,5 +1,11 @@
 {
   "port": 8080,
-  "can_interface": "vcan0",
-  "can_definition": "nissan-leaf-2011-ze0"
+
+  "plugins": {
+    "can": {
+      "enabled": true,
+      "interface": "vcan0",
+      "definition": "nissan-leaf-2011-ze0"
+    }
+  }
 }
