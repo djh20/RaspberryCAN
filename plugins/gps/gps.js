@@ -41,6 +41,7 @@ class GpsPlugin {
   }
 
   listen() {
+    let can_plugin = this.plugin.manager.plugins.get('can');
     let parser = this.socket.pipe(new Readline({ delimiter: '\r\n' }));
 
     parser.on('data', (data) => {
@@ -48,6 +49,7 @@ class GpsPlugin {
     });
 
     this.device.on('data', () => {
+      // TODO: check car on and not in park
       let lat = this.device.state.lat;
       let lon = this.device.state.lon;
       let last_lat = this.plugin.data.latitude;
@@ -62,13 +64,16 @@ class GpsPlugin {
           this.plugin.data.longitude,
           lat,
           lon
-        );
+        ) * 1000; // convert from km to m
 
-        this.plugin.logger.info(`Location updated (moved ${distance} km).`);
+        distance = Math.round((distance + Number.EPSILON) * 100) / 100;
+
+        this.plugin.logger.info(`Location updated (moved ${distance} m).`);
       }
 
       this.plugin.data.latitude = lat;
       this.plugin.data.longitude = lon;
+      
     });
   }
 
