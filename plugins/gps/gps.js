@@ -14,6 +14,10 @@ class GpsPlugin {
   }
 
   async register(plugin) {
+    plugin.data.distance = 0;
+    plugin.data.latitude = 0;
+    plugin.data.longitude = 0;
+
     let port = plugin.config.port;
 
     if (!port) {
@@ -44,7 +48,19 @@ class GpsPlugin {
     });
 
     this.device.on('data', () => {
-      console.log(this.device.state.lat, this.device.state.lon);
+      let lat = this.device.state.lat;
+      let lon = this.device.state.lon;
+      if (!lat || !lon) return;
+      if (lat == this.plugin.data.latitude && lon == this.plugin.data.longitude) return;
+
+      let distance = gps.Distance(
+        this.plugin.data.latitude, 
+        this.plugin.data.longitude,
+        lat,
+        lon
+      );
+
+      this.plugin.logger.info(`Location updated (moved ${distance} km).`);
     });
   }
 
