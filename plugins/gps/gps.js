@@ -14,6 +14,7 @@ class GpsPlugin {
   }
 
   async register(plugin) {
+    plugin.data.active = true;
     plugin.data.distance = 0;
     plugin.data.latitude = null;
     plugin.data.longitude = null;
@@ -25,8 +26,10 @@ class GpsPlugin {
       return false;
     }
 
+    this.websocket_plugin = plugin.manager.plugins.get('websocket');
     this.plugin = plugin;
     this.port = port;
+
     return true;
   }
 
@@ -40,6 +43,50 @@ class GpsPlugin {
       .catch(err => this.plugin.logger.error(err));
   }
 
+  update() {
+    // TODO: check car on and not in park
+    let lat = this.device.state.lat;
+    let lon = this.device.state.lon;
+    let last_lat = this.plugin.data.latitude;
+    let last_lon = this.plugin.data.longitude;
+
+    if (lat == null || lon == null) return;
+    if (lat == last_lat && lon == last_lon) return;
+
+    if (last_lat != null && last_lon != null && this.plugin.data.active) {
+      let distance = gps.Distance(
+        this.plugin.data.latitude, 
+        this.plugin.data.longitude,
+        lat,
+        lon
+      ) * 1000; // convert from km to m
+      
+      distance = Math.round((distance + Number.EPSILON) * 100) / 100;
+
+      // to try and correct for gps wandering and glitching.
+      // this isn't a very good way of doing it, it should probably be changed.
+      if (distance <= 0.3 || distance >= 1000) return;
+
+      this.plugin.data.distance += distance;
+      this.plugin.logger.info(`Location updated (moved ${distance} m).`);
+
+      if (this.websocket_plugin) {
+        let data = new Uint16Array([this.plugin.data.distance/100]);
+        if (data.byteLength >= 2) {
+          data = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+        }
+        let merged = new Uint8Array(data.length + 1);
+        merged.set(new Uint8Array([255]));
+        merged.set(data, 1);
+
+        this.websocket_plugin.instance.broadcast(merged);
+      }
+    }
+
+    this.plugin.data.latitude = lat;
+    this.plugin.data.longitude = lon;
+  }
+
   listen() {
     let can_plugin = this.plugin.manager.plugins.get('can');
     let parser = this.socket.pipe(new Readline({ delimiter: '\r\n' }));
@@ -48,33 +95,7 @@ class GpsPlugin {
       this.device.update(data);
     });
 
-    this.device.on('data', () => {
-      // TODO: check car on and not in park
-      let lat = this.device.state.lat;
-      let lon = this.device.state.lon;
-      let last_lat = this.plugin.data.latitude;
-      let last_lon = this.plugin.data.longitude;
-
-      if (lat == null || lon == null) return;
-      if (lat == last_lat && lon == last_lon) return;
-
-      if (last_lat != null && last_lon != null) {
-        let distance = gps.Distance(
-          this.plugin.data.latitude, 
-          this.plugin.data.longitude,
-          lat,
-          lon
-        ) * 1000; // convert from km to m
-
-        distance = Math.round((distance + Number.EPSILON) * 100) / 100;
-
-        this.plugin.logger.info(`Location updated (moved ${distance} m).`);
-      }
-
-      this.plugin.data.latitude = lat;
-      this.plugin.data.longitude = lon;
-      
-    });
+    setInterval(() => this.update(), 3000);
   }
 
   connect() {
