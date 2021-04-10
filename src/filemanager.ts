@@ -8,7 +8,7 @@ interface ReadDirectoryResults {
   children: string[];
 }
 
-class FileManager {
+export default class FileManager {
   public readFile(params: {path: string, encoding?: BufferEncoding, json?: boolean}): Promise<ReadFileResults> {
     return new Promise((resolve, reject) => {
       fs.readFile(params.path, {encoding: params.encoding || 'utf-8'}, (err, data) => {
@@ -36,5 +36,3 @@ class FileManager {
     });
   }
 }
-
-export default new FileManager();

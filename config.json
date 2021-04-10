@@ -6,6 +6,13 @@
       "enabled": true,
       "interface": "vcan0",
       "definition": "nissan-leaf-2011-ze0"
+    },
+    "websocket": {
+      "enabled": true
+    },
+    "gps": {
+      "enabled": true,
+      "port": "/dev/ttyS0"
     }
   }
 }

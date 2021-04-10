@@ -1,4 +1,4 @@
-import FileManager from './filemanager';
+import App from './app';
 import Logger from './logger';
 
 interface ConfigData {
@@ -8,10 +8,12 @@ interface ConfigData {
 export default class Config {
   public data: ConfigData;
 
+  private app: App;
   private path: string;
   private logger: Logger;
   
-  constructor(path: string) {
+  constructor(app: App, path: string) {
+    this.app = app;
     this.path = path;
     this.data = {};
     this.logger = new Logger('Config');
@@ -21,7 +23,7 @@ export default class Config {
     this.logger.info('Loading file...');
 
     // read the config file
-    let file = await FileManager.readFile({path: this.path, json: true});
+    let file = await this.app.fileManager.readFile({path: this.path, json: true});
 
     // check if json data was sent back
     if (file.json) {

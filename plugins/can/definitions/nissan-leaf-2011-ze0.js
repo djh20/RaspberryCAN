@@ -5,7 +5,7 @@ module.exports = {
     {
       id: 0x11a,
       name: 'Shift Controller',
-      values: [
+      points: [
         {
           id: 4,
           name: 'gear',
@@ -26,7 +26,7 @@ module.exports = {
     {
       id: 0x5bc,
       name: 'Lithium Battery Controller (500ms)',
-      values: [
+      points: [
         {
           id: 7,
           name: 'soc_gids',
@@ -37,7 +37,7 @@ module.exports = {
     {
       id: 0x1db,
       name: 'Lithium Battery Controller (10ms)',
-      values: [
+      points: [
         {
           id: 8,
           name: 'battery_power',
@@ -68,7 +68,7 @@ module.exports = {
     {
       id: 0x55b,
       name: 'Lithium Battery Controller (10ms)',
-      values: [
+      points: [
         {
           id: 6,
           name: 'soc_percent',
@@ -80,7 +80,7 @@ module.exports = {
     {
       id: 0x1d4,
       name: 'Vehicle Control Module (10ms)',
-      values: [
+      points: [
         {
           id: 9,
           name: 'charging',
@@ -94,7 +94,7 @@ module.exports = {
     {
       id: 0x284,
       name: 'ABS Module',
-      values: [
+      points: [
         {
           id: 2,
           name: 'left_speed',
@@ -123,7 +123,7 @@ module.exports = {
     {
       id: 0x55a,
       name: 'Inverter (100ms)',
-      values: [
+      points: [
         {
           id: 12,
           name: 'motor_temp',
@@ -141,7 +141,7 @@ module.exports = {
     {
       id: 0x54c,
       name: 'Climate',
-      values: [
+      points: [
         {
           name: 'ambient_temp',
           process: (buf) => (buf[6]) / 2.0 - 40,
@@ -152,7 +152,7 @@ module.exports = {
     {
       id: 0x54b,
       name: 'Climate',
-      values: [
+      points: [
         {
           id: 10,
           name: 'climate_fan_speed',
