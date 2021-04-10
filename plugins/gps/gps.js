@@ -15,8 +15,8 @@ class GpsPlugin {
 
   async register(plugin) {
     plugin.data.distance = 0;
-    plugin.data.latitude = 0;
-    plugin.data.longitude = 0;
+    plugin.data.latitude = null;
+    plugin.data.longitude = null;
 
     let port = plugin.config.port;
 
@@ -50,17 +50,25 @@ class GpsPlugin {
     this.device.on('data', () => {
       let lat = this.device.state.lat;
       let lon = this.device.state.lon;
-      if (!lat || !lon) return;
-      if (lat == this.plugin.data.latitude && lon == this.plugin.data.longitude) return;
+      let last_lat = this.plugin.data.latitude;
+      let last_lon = this.plugin.data.longitude;
 
-      let distance = gps.Distance(
-        this.plugin.data.latitude, 
-        this.plugin.data.longitude,
-        lat,
-        lon
-      );
+      if (lat == null || lon == null) return;
+      if (lat == last_lat && lon == last_lon) return;
 
-      this.plugin.logger.info(`Location updated (moved ${distance} km).`);
+      if (last_lat != null && last_lon != null) {
+        let distance = gps.Distance(
+          this.plugin.data.latitude, 
+          this.plugin.data.longitude,
+          lat,
+          lon
+        );
+
+        this.plugin.logger.info(`Location updated (moved ${distance} km).`);
+      }
+
+      this.plugin.data.latitude = lat;
+      this.plugin.data.longitude = lon;
     });
   }
 

@@ -40,6 +40,18 @@ class WebsocketPlugin {
       // listen for the metricUpdated event (from CAN plugin)
       can_plugin.on('metricUpdated', (metric) => {
         this.sendMetrics([metric]);
+        
+        /*
+        let data = new Uint16Array([5000/100]);
+        if (data.byteLength >= 2) {
+          data = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+        }
+        let merged = new Uint8Array(data.length + 1);
+        merged.set(new Uint8Array([255]));
+        merged.set(data, 1);
+
+        this.broadcast(merged);
+        */
       });
     }
 
