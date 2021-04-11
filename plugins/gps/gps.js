@@ -33,7 +33,7 @@ class GpsPlugin {
   }
 
   start() {
-    this.websocket_plugin = plugin.manager.plugins.get('websocket');
+    this.websocket_plugin = this.plugin.manager.plugins.get('websocket');
     this.connect()
       .then((value) => {
         if (!value) return;
