@@ -24,7 +24,14 @@ export default class GpsModule {
     if (lat == null || lon == null) return;
     if (lat == this.lat && lon == this.lon) return;
 
-    if (this.lat != null && this.lon != null) {
+    // this makes sure we're in a gear that isn't park
+    // (we can't be moving if we're in park)
+    
+    // this should be changed to actually support other cars
+    // as not all vehicles will have the same gear metric.
+    let gear = this.vehicle.metrics.get('gear');
+
+    if (this.lat != null && this.lon != null && gear && gear.value != 0 && gear.value != 1) {
       let distance = GPS.Distance(
         this.lat, 
         this.lon,
@@ -34,7 +41,7 @@ export default class GpsModule {
       
       distance = Math.round((distance + Number.EPSILON) * 100) / 100;
 
-      console.log(distance);
+      console.log(`Moved: ${distance}m`);
 
       // to try and correct for gps wandering and glitching.
       // this isn't a very good way of doing it, it should probably be changed.
