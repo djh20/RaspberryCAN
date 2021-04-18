@@ -1,18 +1,6 @@
 {
   "port": 8080,
-
-  "plugins": {
-    "can": {
-      "enabled": true,
-      "interface": "vcan0",
-      "definition": "nissan-leaf-2011-ze0"
-    },
-    "websocket": {
-      "enabled": true
-    },
-    "gps": {
-      "enabled": true,
-      "port": "/dev/ttyS0"
-    }
-  }
+  "can_interface": "vcan0",
+  "can_definition": "nissan-leaf-2011-ze0",
+  "gps_port": "/dev/ttyS0"
 }

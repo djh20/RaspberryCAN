@@ -1,7 +1,7 @@
 module.exports = {
   id: 'nissan-leaf-2011-ze0',
   name: 'Nissan Leaf 2011 (ZE0)',
-  messages: [
+  groups: [
     {
       id: 0x11a,
       name: 'Shift Controller',

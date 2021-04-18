@@ -1,8 +1,6 @@
-import * as p from 'path';
-import App from './app';
+import App from './app/App';
 
-let app = new App({
-  configPath: p.resolve(__dirname, "../config.json")
-});
+console.log("Starting...");
 
-app.init();
+const app = new App();
+app.start().then(() => console.log("Ready!"));
