@@ -8,7 +8,9 @@ html(lang="en")
     script(src='/bundle.js')
   body
     include components/banner
-    include components/navigation
 
     div#content
+      h1= data.page
       block content
+
+    include components/navigation

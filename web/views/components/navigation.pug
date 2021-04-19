@@ -3,21 +3,27 @@ mixin title(text)
 
 mixin button(params)
   - let text = params.text
+  - let page = params.page
   - let icon = params.icon
   - let selected = params.page == data.page
 
-  div.button(class=selected ? 'selected' : '')
-    if icon
-      img.icon(src='icons/' + icon)
-    if text
-      span.label= text
+  a.link(href=page)
+    div.button(class=selected ? 'selected' : '')
+      if icon
+        img.icon(src='icons/' + icon)
+      if text
+        span.label= text
 
-div.navigation
-  div.section
-    +title('Views')
-    +button({text:'Home', page:'home', icon:'home.svg'})
-    +button({text:'CAN', icon:'can.svg'})
-  div.section
-    +title('Maintenance')
-    +button({text:'Settings', icon:'settings.svg'})
-    +button({text:'Logs'})
+div.navigation-wrapper
+  div.navigation
+    div.section
+      +title('Views')
+      +button({text:'Metrics', page:'metrics', icon:'can.svg'})
+    //div.section
+      +title('Views')
+      +button({text:'Home', page:'home', icon:'home.svg'})
+      +button({text:'CAN', icon:'can.svg'})
+    //div.section
+      +title('Maintenance')
+      +button({text:'Settings', icon:'settings.svg'})
+      +button({text:'Logs'})

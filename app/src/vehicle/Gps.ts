@@ -1,13 +1,18 @@
 import GPS from 'gps';
 import SerialPort, { parsers } from 'serialport'; 
 import Logger from '../util/Logger';
+import Metric from './Metric';
 import Vehicle from './Vehicle';
 
 export default class GpsModule {
   public connected: boolean;
+  public locked: boolean;
   public lat: number;
   public lon: number;
   public travelled: number;
+
+  private tripMetric: Metric;
+  private statusMetric: Metric;
 
   private vehicle: Vehicle;
   private gps: GPS;
@@ -27,10 +32,11 @@ export default class GpsModule {
     parser.on('data', data => this.gps.update(data));
 
     setInterval(() => this.update(), 3000);
+    this.update();
   }
 
   public connect(port: string): Promise<boolean> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       let socket = new SerialPort(port, {baudRate: 9600}, (err) => {
         if (!err) {
           Logger.info('GPS', "Connected!");
@@ -51,7 +57,22 @@ export default class GpsModule {
     let lat = this.gps.state.lat;
     let lon = this.gps.state.lon;
 
-    if (lat == null || lon == null) return;
+    this.locked = lat != null && lon != null;
+
+    this.statusMetric = this.vehicle.getMetric({
+      name:'gps_status', 
+      id:254
+    });
+
+    this.tripMetric = this.vehicle.getMetric({
+      name:'gps_trip_distance', 
+      id:255,
+      convert: (value) => new Uint16Array([value/100])
+    });
+
+    this.statusMetric.setValue(this.locked ? 1 : 0);
+
+    if (!this.locked) return;
     if (lat == this.lat && lon == this.lon) return;
 
     let info = this.vehicle.definition.getInfo(this.vehicle.metrics);
@@ -73,25 +94,17 @@ export default class GpsModule {
 
       Logger.info('GPS', `Moved ${distance}m (total: ${this.travelled}m)`);
 
-      this.updateMetric();
+      this.tripMetric.setValue(this.travelled);
     }
 
     this.lat = lat;
     this.lon = lon;
   }
 
-  public updateMetric() {
-    let metric = this.vehicle.getMetric({
-      name:'travelled', 
-      id:255,
-      convert: (value) => new Uint16Array([value/100])
-    });
-    
-    metric.setValue(this.travelled);
-  }
-
   public reset() {
     this.travelled = 0;
-    this.updateMetric();
+
+    if (!this.tripMetric) return;
+    this.tripMetric.setValue(0);
   }
 }

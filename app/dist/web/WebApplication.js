@@ -33,8 +33,8 @@ class WebApplication {
     start() {
         let pages = [
             {
-                name: 'home',
-                paths: ['/', '/home']
+                name: 'metrics',
+                paths: ['/', '/metrics']
             }
         ];
         let staticPath = p.resolve(this.app.rootPath, 'web/dist');

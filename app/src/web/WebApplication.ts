@@ -15,8 +15,8 @@ export default class WebApplication {
   start() {
     let pages: Page[] = [
       {
-        name: 'home',
-        paths: ['/', '/home']
+        name: 'metrics',
+        paths: ['/', '/metrics']
       }
     ];
     let staticPath = p.resolve(this.app.rootPath, 'web/dist');

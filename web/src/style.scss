@@ -22,14 +22,26 @@ html, body {
     * { vertical-align: middle; }
     .icon { margin-right: 5px; }
   }
+  #menu-button {
+    display: none;
+    float: left;
+    height: 100%;
+    width: 40px;
+    margin-right: 15px;
+    padding-top: 10px;
+    .icon {
+      display: block;
+      margin: auto;
+      width: 100%;
+    }
+  }
 }
 
 .navigation {
   background-color: $navigation-color;
-  height: $content-height;
+  height: 100%;
   width: $navigation-width;
   border: 1px solid $navigation-border-color;
-  float: left;
   padding: 8px 0;
 
   .section {
@@ -39,19 +51,25 @@ html, body {
       font-weight: 500;
       color: $navigation-title-color;
     }
-    .button {
-      height: 45px;
-      margin-top: 5px;
-      padding: 10px;
+    .link {
+      text-decoration: none;
+      color: black;
+      .button {
+        user-select: none;
+        height: 45px;
+        margin-top: 5px;
+        padding: 10px;
 
-      * { vertical-align: middle }
-      .icon {
-        margin: auto;
-        height: 100%;
-        margin-right: 10px;
-      }
-      .label {
-        font-size: 14pt;
+        * { vertical-align: middle }
+        .icon {
+          margin: auto;
+          height: 100%;
+          margin-right: 10px;
+        }
+        .label {
+          text-decoration: none;
+          font-size: 14pt;
+        }
       }
     }
     .button:hover {
@@ -66,6 +84,15 @@ html, body {
     margin-top: 30px;
   }
 }
+.navigation-wrapper {
+  position: relative;
+  z-index: 1;
+  float: left;
+  height: $content-height;
+  width: $navigation-width;
+  overflow: hidden;
+  transition: width 0.2s;
+}
 
 #content {
   padding: 20px;
@@ -73,4 +100,23 @@ html, body {
   width: $content-width;
   height: $content-height;
   left: $navigation-width;
+
+  h1 {
+    text-transform: uppercase;
+    color: #D6D6D6;
+    margin: 0 0 10px 0;
+  }
+}
+
+@media (max-width: $shrink-width) {
+  .navigation-wrapper {
+    width: 0px;
+  }
+  #content {
+    left: 0px;
+    width: 100%;
+  }
+  #menu-button {
+    display: block !important;
+  }
 }
