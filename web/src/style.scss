@@ -1,0 +1,76 @@
+@use 'variables' as *;
+
+* {
+  font-family: 'Roboto'; 
+  box-sizing: border-box;
+}
+html, body { 
+  margin: 0; 
+  height: 100%;
+}
+
+.banner {
+  background-color: $banner-color;
+  color: white;
+  padding: 15px;
+  height: $banner-height;
+  .title {
+    margin: 0;
+    font-weight: 500;
+  }
+  .status {
+    * { vertical-align: middle; }
+    .icon { margin-right: 5px; }
+  }
+}
+
+.navigation {
+  background-color: $navigation-color;
+  height: $content-height;
+  width: $navigation-width;
+  border: 1px solid $navigation-border-color;
+  float: left;
+  padding: 8px 0;
+
+  .section {
+    .title {
+      margin-left: 10px;
+      font-size: 13pt;
+      font-weight: 500;
+      color: $navigation-title-color;
+    }
+    .button {
+      height: 45px;
+      margin-top: 5px;
+      padding: 10px;
+
+      * { vertical-align: middle }
+      .icon {
+        margin: auto;
+        height: 100%;
+        margin-right: 10px;
+      }
+      .label {
+        font-size: 14pt;
+      }
+    }
+    .button:hover {
+      background-color: $navigation-button-color-hover;
+    }
+    .button.selected {
+      background-color: $navigation-button-color-selected;
+    }
+  }
+
+  .section:nth-child(1n+2) { // all elements after first
+    margin-top: 30px;
+  }
+}
+
+#content {
+  padding: 20px;
+  position: absolute;
+  width: $content-width;
+  height: $content-height;
+  left: $navigation-width;
+}

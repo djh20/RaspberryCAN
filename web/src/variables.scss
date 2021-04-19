@@ -1,0 +1,12 @@
+$banner-color: #444444;
+$banner-height: 93px;
+
+$navigation-color: #F6F6F6;
+$navigation-border-color: #D3D3D3;
+$navigation-title-color: #afafaf;
+$navigation-button-color-selected: rgba(0, 0, 0, 0.05);
+$navigation-button-color-hover: rgba(0, 0, 0, 0.03);
+$navigation-width: 270px;
+
+$content-height: calc(100% - #{$banner-height});
+$content-width: calc(100% - #{$navigation-width});

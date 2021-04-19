@@ -1,7 +1,15 @@
 module.exports = {
   id: 'nissan-leaf-2011-ze0',
   name: 'Nissan Leaf 2011 (ZE0)',
-  groups: [
+  getInfo: (metrics) => {
+    let info = {};
+
+    let speed = metrics.get('rear_speed');
+    info.moving = speed && speed.value > 0 ? true: false;
+
+    return info;
+  },
+  can: [
     {
       id: 0x11a,
       name: 'Shift Controller',

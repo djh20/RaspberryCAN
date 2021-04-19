@@ -1,0 +1,14 @@
+doctype html
+html(lang="en")
+  - var titleText = data.config.name || "RaspberryCAN"
+
+  head
+    title #{titleText}
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    script(src='/bundle.js')
+  body
+    include components/banner
+    include components/navigation
+
+    div#content
+      block content

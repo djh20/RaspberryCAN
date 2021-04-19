@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "lib": ["DOM"],
+    "module": "commonjs",
+    "target": "ES5"
+  },
+  "include": ["./web/src"]
+}
