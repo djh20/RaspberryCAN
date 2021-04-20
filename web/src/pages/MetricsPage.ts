@@ -18,17 +18,18 @@ export default class MetricsPage extends Page {
   private update(metrics: Metric[]) {
     metrics.forEach(metric => {
       let widget = this.widgets.get(metric.name);
+      let displayValue = !metric.suffix ? metric.value : `${metric.value}${metric.suffix}`;
       if (!widget) {
         widget = new CardWidget({
           title: metric.name, 
-          value: !metric.suffix ? metric.value : `${metric.value}${metric.suffix}`,
+          value: displayValue,
           parent: this.app.catalog.elements.metrics.layout
         });
         this.widgets.set(metric.name, widget);
         return;
       }
 
-      widget.setState({value:metric.value});
+      widget.setState({value:displayValue});
     });
   }
 }

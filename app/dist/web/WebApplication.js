@@ -35,6 +35,18 @@ class WebApplication {
             {
                 name: 'metrics',
                 paths: ['/', '/metrics']
+            },
+            {
+                name: 'map',
+                paths: ['/map']
+            },
+            {
+                name: 'settings',
+                paths: ['/settings']
+            },
+            {
+                name: 'logs',
+                paths: ['/logs']
             }
         ];
         let staticPath = p.resolve(this.app.rootPath, 'web/dist');

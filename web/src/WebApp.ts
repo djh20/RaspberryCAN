@@ -26,8 +26,17 @@ export default class WebApp extends EventEmitter {
         resolve();
       }
 
-      ws.onerror = () => reject();
+      ws.onclose = () => this.reconnect();
+      
+      ws.onerror = () => {
+        this.reconnect();
+        reject();
+      };
     });
+  }
+
+  public reconnect() {
+    setTimeout(() => location.reload(), 5000);
   }
 
   public load(page: Page) {

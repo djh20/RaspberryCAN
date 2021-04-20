@@ -29,6 +29,7 @@ export default class WebSocketServer {
           let subscription = new JsonSubscription(socket);
           this.subscriptions.push(subscription);
           subscription.sendMetrics(metrics);
+          subscription.update();
         } else if (data[0] == 1) {
           this.app.vehicle.gps.reset();
         }
@@ -43,6 +44,11 @@ export default class WebSocketServer {
     this.app.vehicle.on('metricUpdated', (metric: Metric) => {
       this.subscriptions.forEach(sub => sub.sendMetrics([metric]));
     });
+
+    setInterval(() => {
+      let jsonSubs = this.subscriptions.filter(sub => sub.topic == Topic.JSON);
+      jsonSubs.forEach(sub => sub.update());
+    }, 1000);
 
     Logger.info('WS', `Ready!`);
   }
@@ -62,6 +68,8 @@ abstract class Subscription {
     this.socket.send(data);
   }
 
+  update() {}
+
   abstract sendMetrics(metrics: Metric[]);
 }
 
@@ -80,16 +88,29 @@ class BinarySubscription extends Subscription {
 }
 
 class JsonSubscription extends Subscription {
+  private queue: Metric[];
+
   constructor(socket: WebSocket) { 
-    super(socket, Topic.Text);
+    super(socket, Topic.JSON);
+    this.queue = [];
+  }
+
+  sendMetrics(metrics: Metric[]) {
+    metrics.forEach(metric => {
+      let inQueue = this.queue.find(m => m.point.name == metric.point.name);
+      if (inQueue) return;
+
+      this.queue.push(metric);
+    });
   }
   
-  sendMetrics(metrics: Metric[]) {
+  update() {
     let data: JsonData = {};
-    data.metrics = metrics.map(m => {
+    data.metrics = this.queue.map(m => {
       return {name: m.point.name, value: m.value, suffix: m.point.suffix};
     });
     this.send(JSON.stringify(data));
+    this.queue = [];
   }
 }
 type JsonData = {
@@ -102,5 +123,5 @@ type JsonData = {
 
 enum Topic {
   Binary,
-  Text
+  JSON
 }
