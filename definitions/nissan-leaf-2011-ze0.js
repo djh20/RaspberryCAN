@@ -39,6 +39,11 @@ module.exports = {
           id: 7,
           name: 'soc_gids',
           process: (buf) => (buf[0] << 2) | (buf[1] >> 6)
+        },
+        {
+          name: 'soh',
+          suffix: '%',
+          process: (buf) => (buf[4] & 0xFE) >> 1 
         }
       ]
     },
@@ -80,6 +85,7 @@ module.exports = {
         {
           id: 6,
           name: 'soc_percent',
+          suffix: '%',
           process: (buf) => ((buf[0] << 2) | (buf[1] >> 6)) / 10.0,
           convert: (value) => new Uint16Array([value*100])
         }

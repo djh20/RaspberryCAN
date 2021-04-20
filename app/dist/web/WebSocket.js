@@ -92,7 +92,7 @@ class JsonSubscription extends Subscription {
     sendMetrics(metrics) {
         let data = {};
         data.metrics = metrics.map(m => {
-            return { name: m.point.name, value: m.value };
+            return { name: m.point.name, value: m.value, suffix: m.point.suffix };
         });
         this.send(JSON.stringify(data));
     }

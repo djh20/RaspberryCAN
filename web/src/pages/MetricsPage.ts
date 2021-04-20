@@ -21,7 +21,7 @@ export default class MetricsPage extends Page {
       if (!widget) {
         widget = new CardWidget({
           title: metric.name, 
-          value: metric.value,
+          value: !metric.suffix ? metric.value : `${metric.value}${metric.suffix}`,
           parent: this.app.catalog.elements.metrics.layout
         });
         this.widgets.set(metric.name, widget);

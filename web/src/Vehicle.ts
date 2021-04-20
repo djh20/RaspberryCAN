@@ -9,4 +9,5 @@ export class Vehicle {
 export interface Metric {
   name: string;
   value: number;
+  suffix?: string;
 }

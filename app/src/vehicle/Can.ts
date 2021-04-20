@@ -13,7 +13,7 @@ export default class CanModule {
 
   public connect(channelName: string) {
     try {
-      this.channel = socketcan.createRawChannel(channelName);
+      this.channel = socketcan.createRawChannel(channelName, false, null);
       Logger.info('CAN', "Connected!");
     } catch (err) {
       Logger.warn('CAN', "Failed to connect!");
@@ -48,6 +48,7 @@ export type CanPoint = {
   id?: number,
   name: string,
   log?: boolean,
+  suffix?: string,
   interval?: number,
   process?: (buffer: Buffer) => number,
   convert?: (value: number) => Uint8Array | Uint16Array

@@ -30,7 +30,7 @@ class CanModule {
     }
     connect(channelName) {
         try {
-            this.channel = socketcan.createRawChannel(channelName);
+            this.channel = socketcan.createRawChannel(channelName, false, null);
             Logger_1.default.info('CAN', "Connected!");
         }
         catch (err) {

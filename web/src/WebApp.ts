@@ -72,8 +72,5 @@ export default class WebApp extends EventEmitter {
 }
 
 type WebSocketData = {
-  metrics?: {
-    name: string;
-    value: number;
-  }[]
+  metrics?: Metric[];
 }
