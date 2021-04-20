@@ -22,10 +22,13 @@ export default class WebSocketServer {
       socket.on('message', (data) => {
         Logger.info('WS', `Incoming: ${data}`);
         if (data == "subscribe_binary") {
-          let subscription = new Subscription(socket, Topic.Binary);
+          let subscription = new BinarySubscription(socket);
           this.subscriptions.push(subscription);
-
-          this.sendMetrics(metrics, [subscription]);
+          subscription.sendMetrics(metrics);
+        } else if (data == "subscribe_json") {
+          let subscription = new JsonSubscription(socket);
+          this.subscriptions.push(subscription);
+          subscription.sendMetrics(metrics);
         } else if (data[0] == 1) {
           this.app.vehicle.gps.reset();
         }
@@ -38,42 +41,14 @@ export default class WebSocketServer {
     });
 
     this.app.vehicle.on('metricUpdated', (metric: Metric) => {
-      this.sendMetrics([metric], this.subscriptions);
+      this.subscriptions.forEach(sub => sub.sendMetrics([metric]));
     });
 
     Logger.info('WS', `Ready!`);
   }
-
-  sendMetrics(metrics: Metric[], subscriptions: Subscription[]) {
-    metrics.forEach((metric) => {
-      if (metric.point.id == undefined) return;
-      let binarySubs = this.subscriptions.filter(sub => sub.topic == Topic.Binary);
-      if (binarySubs) {
-        let data = metric.asByteArray();
-        binarySubs.forEach(sub => sub.send(data));
-      }
-    });
-  }
-
-  /*
-  broadcast(data: any, topic: Topic) {
-    this.server.clients.forEach((client) => {
-      if (client.readyState != WebSocket.OPEN) return;
-      client.send(data);
-    });
-  }
-
-  sendMetrics(metrics: Metric[], socket?: WebSocket) {
-    metrics.forEach((metric) => {
-      if (metric.point.id == undefined) return; // if a metric doesn't have an id, it shouldn't be sent.
-      let data = metric.asByteArray();
-      socket ? socket.send(data) : this.broadcast(data);
-    });
-  }
-  */
 }
 
-class Subscription {
+abstract class Subscription {
   public socket: WebSocket;
   public topic: Topic;
 
@@ -86,8 +61,45 @@ class Subscription {
     if (this.socket.readyState != WebSocket.OPEN) return;
     this.socket.send(data);
   }
+
+  abstract sendMetrics(metrics: Metric[]);
+}
+
+class BinarySubscription extends Subscription {
+  constructor(socket: WebSocket) { 
+    super(socket, Topic.Binary);
+  }
+  
+  sendMetrics(metrics: Metric[]) {
+    metrics.forEach((metric) => {
+      if (metric.point.id == undefined) return;
+      let data = metric.asByteArray();
+      this.send(data);
+    });
+  }
+}
+
+class JsonSubscription extends Subscription {
+  constructor(socket: WebSocket) { 
+    super(socket, Topic.Text);
+  }
+  
+  sendMetrics(metrics: Metric[]) {
+    let data: JsonData = {};
+    data.metrics = metrics.map(m => {
+      return {name: m.point.name, value: m.value};
+    });
+    this.send(JSON.stringify(data));
+  }
+}
+type JsonData = {
+  metrics?: {
+    name: string;
+    value: number;
+  }[]
 }
 
 enum Topic {
-  Binary
+  Binary,
+  Text
 }

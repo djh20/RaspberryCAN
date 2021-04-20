@@ -2,9 +2,9 @@ const path = require('path');
 const src = path.resolve(__dirname, 'web/src');
 
 module.exports = {
-  mode: 'production',
+  mode: 'development',
   target: 'web',
-  entry: './web/src/web.ts',
+  entry: './web/src/index.ts',
   output: {
     path: path.resolve(__dirname, 'web/dist'),
     filename: 'bundle.js'

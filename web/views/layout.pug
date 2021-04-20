@@ -5,6 +5,7 @@ html(lang="en")
   head
     title #{titleText}
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta#page-meta(name=data.page)
     script(src='/bundle.js')
   body
     include components/banner

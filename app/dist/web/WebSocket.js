@@ -36,9 +36,14 @@ class WebSocketServer {
             socket.on('message', (data) => {
                 Logger_1.default.info('WS', `Incoming: ${data}`);
                 if (data == "subscribe_binary") {
-                    let subscription = new Subscription(socket, Topic.Binary);
+                    let subscription = new BinarySubscription(socket);
                     this.subscriptions.push(subscription);
-                    this.sendMetrics(metrics, [subscription]);
+                    subscription.sendMetrics(metrics);
+                }
+                else if (data == "subscribe_json") {
+                    let subscription = new JsonSubscription(socket);
+                    this.subscriptions.push(subscription);
+                    subscription.sendMetrics(metrics);
                 }
                 else if (data[0] == 1) {
                     this.app.vehicle.gps.reset();
@@ -50,22 +55,9 @@ class WebSocketServer {
             });
         });
         this.app.vehicle.on('metricUpdated', (metric) => {
-            this.sendMetrics([metric], this.subscriptions);
+            this.subscriptions.forEach(sub => sub.sendMetrics([metric]));
         });
         Logger_1.default.info('WS', `Ready!`);
-    }
-    sendMetrics(metrics, subscriptions) {
-        metrics.forEach((metric) => {
-            if (metric.point.id == undefined)
-                return;
-            let binarySubs = this.subscriptions.filter(sub => sub.topic == Topic.Binary);
-            if (binarySubs) {
-                let data = metric.asByteArray();
-                if (metric.point.log != false)
-                    console.log(metric.point.name, metric.value, data);
-                binarySubs.forEach(sub => sub.send(data));
-            }
-        });
     }
 }
 exports.default = WebSocketServer;
@@ -80,7 +72,33 @@ class Subscription {
         this.socket.send(data);
     }
 }
+class BinarySubscription extends Subscription {
+    constructor(socket) {
+        super(socket, Topic.Binary);
+    }
+    sendMetrics(metrics) {
+        metrics.forEach((metric) => {
+            if (metric.point.id == undefined)
+                return;
+            let data = metric.asByteArray();
+            this.send(data);
+        });
+    }
+}
+class JsonSubscription extends Subscription {
+    constructor(socket) {
+        super(socket, Topic.Text);
+    }
+    sendMetrics(metrics) {
+        let data = {};
+        data.metrics = metrics.map(m => {
+            return { name: m.point.name, value: m.value };
+        });
+        this.send(JSON.stringify(data));
+    }
+}
 var Topic;
 (function (Topic) {
     Topic[Topic["Binary"] = 0] = "Binary";
+    Topic[Topic["Text"] = 1] = "Text";
 })(Topic || (Topic = {}));
