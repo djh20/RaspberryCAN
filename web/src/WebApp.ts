@@ -72,7 +72,7 @@ export default class WebApp extends EventEmitter {
   }
 
   public process(data: WebSocketData) {
-    let metrics: Metric[] = data.metrics;
+    let metrics = data.metrics;
     if (metrics) {
       metrics.forEach(m => this.vehicle.metrics.set(m.name, m));
       this.emit('metrics_updated', metrics);

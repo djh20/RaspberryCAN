@@ -105,6 +105,8 @@ class JsonSubscription extends Subscription {
         });
     }
     update() {
+        if (this.queue.length == 0)
+            return;
         let data = {};
         data.metrics = this.queue.map(m => {
             return { name: m.point.name, value: m.value, suffix: m.point.suffix };

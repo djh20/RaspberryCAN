@@ -158,7 +158,11 @@ module.exports = {
       points: [
         {
           name: 'ambient_temp',
-          process: (buf) => (buf[6]) / 2.0 - 40,
+          process: (buf) => {
+            // if the byte is 11111111, then the temperature is invalid.
+            if (buf[6] == 0xff) return null;
+            return (buf[6]) / 2.0 - 40;
+          },
           convert: (value) => new Uint16Array([value*100])
         }
       ]

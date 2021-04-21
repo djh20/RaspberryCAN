@@ -7,6 +7,8 @@ class Metric {
         this.value = 0;
     }
     setValue(val) {
+        if (val == null)
+            return;
         if (this.point.interval) {
             let timeSinceLastUpdate = Date.now() - this.lastUpdate;
             if (timeSinceLastUpdate < this.point.interval)

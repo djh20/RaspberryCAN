@@ -36,7 +36,15 @@ class GpsModule {
         if (!this.socket)
             return;
         let parser = this.socket.pipe(new serialport_1.parsers.Readline({ delimiter: '\r\n' }));
-        parser.on('data', data => this.gps.update(data));
+        parser.on('data', data => {
+            try {
+                this.gps.update(data);
+            }
+            catch (err) {
+                Logger_1.default.info('GPS', "Error while parsing data, ignoring...");
+            }
+            ;
+        });
         setInterval(() => this.update(), 3000);
         this.update();
     }

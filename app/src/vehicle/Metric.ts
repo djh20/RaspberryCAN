@@ -15,6 +15,8 @@ export default class Metric {
   }
 
   public setValue(val: number) {
+    if (val == null) return;
+
     if (this.point.interval) {
       let timeSinceLastUpdate = Date.now() - this.lastUpdate;
       if (timeSinceLastUpdate < this.point.interval) return;
