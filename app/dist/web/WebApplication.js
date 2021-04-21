@@ -25,6 +25,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const p = __importStar(require("path"));
 const express_1 = __importDefault(require("express"));
 const Logger_1 = __importDefault(require("../util/Logger"));
+const pug_1 = require("pug");
 class WebApplication {
     constructor(app) {
         this.app = app;
@@ -52,15 +53,21 @@ class WebApplication {
         let staticPath = p.resolve(this.app.rootPath, 'web/dist');
         let viewsPath = p.resolve(this.app.rootPath, 'web/views');
         this.expressApp.use(express_1.default.static(staticPath));
-        this.expressApp.set('views', viewsPath);
-        this.expressApp.set('view engine', 'pug');
-        pages.forEach(page => page.paths.forEach(path => {
-            this.expressApp.get(path, (req, res) => {
-                res.render(page.name, { data: { page: page.name, config: this.app.config.data } });
+        pages.forEach(page => {
+            let filePath = p.resolve(viewsPath, page.name + '.pug');
+            page.template = pug_1.compileFile(filePath);
+            page.paths.forEach(path => {
+                this.expressApp.get(path, (req, res) => {
+                    res.status(200).send(this.getPageData(page));
+                });
             });
-        }));
-        //this.expressApp.listen(port, () => Logger.info('Web', `Listening on port ${port}`));
+        });
         Logger_1.default.info('Web', "Ready!");
+    }
+    getPageData(page) {
+        return page.template({
+            data: { page: page.name, config: this.app.config.data }
+        });
     }
 }
 exports.default = WebApplication;

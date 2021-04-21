@@ -2,6 +2,7 @@ import * as p from 'path';
 import App from "../app/App";
 import express, { Application as ExpressApplication } from 'express'
 import Logger from "../util/Logger";
+import { compileFile, compileTemplate } from 'pug';
 
 export default class WebApplication {
   public app: App;
@@ -36,23 +37,29 @@ export default class WebApplication {
 
     this.expressApp.use(express.static(staticPath));
 
-    this.expressApp.set('views', viewsPath);
-    this.expressApp.set('view engine', 'pug');
+    pages.forEach(page => {
+      let filePath = p.resolve(viewsPath, page.name + '.pug');
+      page.template = compileFile(filePath);
 
-    pages.forEach(page => page.paths.forEach(path => {
-
-      this.expressApp.get(path, (req, res) => {
-        res.render(page.name, {data: {page: page.name, config: this.app.config.data}})
+      page.paths.forEach(path => {
+        this.expressApp.get(path, (req, res) => {
+          res.status(200).send(this.getPageData(page));
+        });
       });
+    });
 
-    }));
-
-    //this.expressApp.listen(port, () => Logger.info('Web', `Listening on port ${port}`));
     Logger.info('Web', "Ready!");
+  }
+
+  getPageData(page: Page): string {
+    return page.template({
+      data: {page: page.name, config: this.app.config.data}
+    });
   }
 }
 
 type Page = {
   name: string;
   paths: string[];
+  template?: compileTemplate;
 }
