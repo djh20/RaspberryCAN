@@ -32,18 +32,23 @@ const WebApplication_1 = __importDefault(require("../web/WebApplication"));
 const http_1 = require("http");
 const Logger_1 = __importDefault(require("../util/Logger"));
 class App {
-    constructor() {
+    constructor(version) {
         this.vehicle = new Vehicle_1.default();
         this.rootPath = p.resolve(__dirname, '../../../');
-        this.definitionsPath = p.resolve(this.rootPath, 'definitions');
         this.configPath = p.resolve(this.rootPath, 'config.json');
+        this.definitionsPath = p.resolve(this.rootPath, 'definitions');
+        this.storagePath = p.resolve(this.rootPath, 'storage');
+        this.tripsPath = p.resolve(this.storagePath, 'trips');
         this.config = new Config_1.default(this.configPath);
         this.ws = new WebSocket_1.default(this);
         this.webApp = new WebApplication_1.default(this);
         this.server = new http_1.Server(this.webApp.expressApp);
+        this.version = version;
     }
     async start() {
         await this.config.load();
+        await FileSystem_1.default.createDirectory(this.storagePath);
+        await FileSystem_1.default.createDirectory(this.tripsPath);
         // TODO: move this connection logic into the vehicle class (under a connect() method).
         // this would allow multiple vehicles instances to be running at the same time.
         let definitions = await this.getDefinitions();
@@ -60,6 +65,7 @@ class App {
             if (connected)
                 this.vehicle.gps.listen();
         }
+        this.vehicle.tripManager.load(this.tripsPath);
         let port = this.config.data.port;
         this.server.listen(port, () => {
             Logger_1.default.info('Server', `Listening on port ${port}`);

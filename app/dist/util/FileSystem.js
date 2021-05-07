@@ -42,6 +42,14 @@ var FileSystem;
         });
     }
     FileSystem.readFile = readFile;
+    function createDirectory(path) {
+        return new Promise((resolve, reject) => {
+            node_fs.mkdir(path, (err) => {
+                !err ? resolve(true) : resolve(false);
+            });
+        });
+    }
+    FileSystem.createDirectory = createDirectory;
     function readDirectory(params) {
         // if a directory is given, use path to get the full path
         if (params.dir)

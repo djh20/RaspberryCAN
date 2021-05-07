@@ -17,14 +17,9 @@ mixin button(params)
 div#navigation-wrapper
   div.navigation
     div.section
-      //+title('Views')
       +button({text:'Metrics', page:'metrics', icon:'can.svg'})
       +button({text:'Map', page:'map', icon:'map.svg'})
-    //div.section
-      +title('Views')
-      +button({text:'Home', page:'home', icon:'home.svg'})
-      +button({text:'CAN', icon:'can.svg'})
-    div.section
-      //+title('Administrator')
-      +button({text:'Settings', page:'settings', icon:'settings.svg'})
       +button({text:'Logs', page:'logs', icon:'logs.svg'})
+      //+button({text:'Settings', page:'settings', icon:'settings.svg'})
+      
+    span.version= data.version

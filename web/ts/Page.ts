@@ -9,7 +9,7 @@ export abstract class Page {
     this.name = name;
   }
 
-  public abstract load(): void;
+  public abstract load(): Promise<void>;
 }
 
 export class PageManager {}

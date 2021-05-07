@@ -33,6 +33,8 @@ export default class CardWidget extends Widget {
       case "value":
         this.elements.value.innerText = value;
         break;
+      case "width":
+        this.elements.card.style.width = `${value}px`;
     }
   }
 }
@@ -40,5 +42,6 @@ export default class CardWidget extends Widget {
 type CardWidgetState = {
   title?: string;
   value?: string | number;
+  width?: number;
   parent?: HTMLElement;
 }

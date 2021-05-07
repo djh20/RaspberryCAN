@@ -1,4 +1,5 @@
 type Elements = {
+  overlay: HTMLDivElement,
   status: {
     icon: HTMLImageElement,
     label: HTMLSpanElement
@@ -11,7 +12,13 @@ type Elements = {
   },
   metrics: {
     layout: HTMLDivElement
-  }
+  },
+  map: {
+    map: HTMLDivElement
+  },
+  logs: {
+    content: HTMLDivElement
+  },
 };
 
 export default class Catalog {
@@ -19,6 +26,7 @@ export default class Catalog {
 
   public load() {
     this.elements = {
+      overlay: <HTMLDivElement> document.getElementById('overlay'),
       status: {
         icon: <HTMLImageElement> document.getElementById('status-icon'),
         label: <HTMLSpanElement> document.getElementById('status-label')
@@ -32,6 +40,12 @@ export default class Catalog {
       metrics: {
         layout: <HTMLDivElement> document.getElementById('metrics')
       },
+      map: {
+        map: <HTMLDivElement> document.getElementById('map')
+      },
+      logs: {
+        content: <HTMLDivElement> document.getElementById('logs')
+      }
     }
   }
 }

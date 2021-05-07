@@ -1,10 +1,10 @@
 import App from './app/App';
 import Logger from './util/Logger';
 
-const VERSION = "2021.04.7d";
+const VERSION = "2021.05-2d";
 
 console.log(`RaspberryCAN (${VERSION})`)
 Logger.info('App', `Starting...`);
 
-const app = new App();
+const app = new App(VERSION);
 app.start();

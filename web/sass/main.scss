@@ -86,10 +86,17 @@ html, body {
   .section:nth-child(1n+2) { // all elements after first
     margin-top: 30px;
   }
+
+  .version {
+    display: block;
+    color: #919191;
+    font-size: 10pt;
+    margin: 15px 0px 0px 10px;
+  }
 }
 #navigation-wrapper {
   position: relative;
-  z-index: 1;
+  z-index: 1000;
   float: left;
   height: $content-height;
   width: $navigation-width;
@@ -111,6 +118,28 @@ html, body {
   }
 }
 
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1001;
+  background: $overlay-color;
+  pointer-events: none;
+
+  transition: opacity 0.25s;
+  span {
+    display: block;
+    margin: 50px 0;
+    color: #D6D6D6;
+    font-weight: 500;
+    font-size: 30pt;
+    text-align: center;
+    text-transform: uppercase;
+  }
+}
+
 .layout-grid {
   max-width: 1000px;
   align-content: flex-start;
@@ -126,7 +155,6 @@ html, body {
 
   padding: 8px 10px;
   margin: 5px;
-  width: 260px;
   height: 40px;
 
   .title {
@@ -140,6 +168,10 @@ html, body {
   .value {
     font-size: 13pt;
   }
+}
+
+#map {
+  height: 500px;
 }
 
 @media (max-width: $shrink-width) {

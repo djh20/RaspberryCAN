@@ -34,7 +34,7 @@ class WebSocketServer {
         this.server.on('connection', (socket) => {
             let metrics = Array.from(this.app.vehicle.metrics.values());
             socket.on('message', (data) => {
-                Logger_1.default.info('WS', `Incoming: ${data}`);
+                //Logger.info('WS', `Incoming: ${data}`);
                 if (data == "subscribe_binary") {
                     let subscription = new BinarySubscription(socket);
                     this.subscriptions.push(subscription);

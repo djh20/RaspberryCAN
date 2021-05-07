@@ -32,7 +32,7 @@ export default class WebApplication {
         paths: ['/logs']
       }
     ];
-    let staticPath = p.resolve(this.app.rootPath, 'web/dist');
+    let staticPath = p.resolve(this.app.rootPath, 'web/static');
     let viewsPath = p.resolve(this.app.rootPath, 'web/views');
 
     this.expressApp.use(express.static(staticPath));
@@ -48,12 +48,22 @@ export default class WebApplication {
       });
     });
 
+    this.expressApp.get('/api/trips', (req, res) => {
+      res.type('json');
+      res.send(this.app.vehicle.tripManager.trips);
+    });
+
+    this.expressApp.get('/api/logs', (req, res) => {
+      res.type('json');
+      res.send(Logger.history);
+    });
+
     Logger.info('Web', "Ready!");
   }
 
   getPageData(page: Page): string {
     return page.template({
-      data: {page: page.name, config: this.app.config.data}
+      data: {page: page.name, config: this.app.config.data, version: this.app.version}
     });
   }
 }

@@ -17,6 +17,12 @@ export default class WebApp extends EventEmitter {
     this.pm = new PageManager();
   }
 
+  public init() {
+    this.catalog.load();
+    //this.catalog.elements.overlay.remove();
+    this.catalog.elements.overlay.style.opacity = '0';
+  }
+
   public async connect(ip: string): Promise<void> {
     return new Promise((resolve, reject) => {
       let ws = new WebSocket(`ws://${ip}`);
@@ -40,8 +46,6 @@ export default class WebApp extends EventEmitter {
   }
 
   public load(page: Page) {
-    this.catalog.load();
-
     let navState = false;
     let menuButton = this.catalog.elements.banner.menuButton;
     let navWrapper = this.catalog.elements.navigation.wrapper;

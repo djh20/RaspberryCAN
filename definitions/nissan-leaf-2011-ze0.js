@@ -56,6 +56,7 @@ module.exports = {
           name: 'battery_power',
           log: false,
           interval: 50,
+          suffix: ' kW',
           process: (buf) => {
             let voltage = ((buf[2] << 2) | (buf[3] >> 6)) / 2.0;
             let current = ((buf[0] << 3) | (buf[1] & 0xe0) >> 5);
@@ -129,6 +130,7 @@ module.exports = {
           id: 1,
           log: false,
           name: 'rear_speed',
+          suffix: ' km/h',
           interval: 80,
           process: (buf) => ((buf[4] << 8) | buf[5]) / 100
         },
@@ -141,12 +143,14 @@ module.exports = {
         {
           id: 12,
           name: 'motor_temp',
+          suffix: '°C',
           process: (buf) => 5.0 / 9.0 * (buf[1] - 32),
           convert: (value) => new Uint16Array([value*100])
         },
         {
           id: 11,
           name: 'inverter_temp',
+          suffix: '°C',
           process: (buf) => 5.0 / 9.0 * (buf[2] - 32),
           convert: (value) => new Uint16Array([value*100])
         }
@@ -158,6 +162,7 @@ module.exports = {
       points: [
         {
           name: 'ambient_temp',
+          suffix: '°C',
           process: (buf) => {
             // if the byte is 11111111, then the temperature is invalid.
             if (buf[6] == 0xff) return null;

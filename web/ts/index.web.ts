@@ -1,8 +1,12 @@
-import './sass/style';
-import 'typeface-roboto';
-import { Page, PageManager } from './Page';
+import 'leaflet'
+import '../sass/main';
+import 'leaflet/dist/leaflet.css'
+
+import { Page } from './Page';
 import WebApp from './WebApp';
 import MetricsPage from './pages/MetricsPage';
+import MapPage from './pages/MapPage';
+import LogsPage from './pages/LogsPage';
 
 const app = new WebApp();
 const ip = location.host;
@@ -10,12 +14,15 @@ const pageMeta = <HTMLMetaElement> document.getElementById('page-meta');
 const pageName = pageMeta.getAttribute('name');
 
 const pages: Page[] = [
-  new MetricsPage(app)
+  new MetricsPage(app),
+  new MapPage(app),
+  new LogsPage(app)
 ];
 
 window.addEventListener('load', () => {
   const page = pages.find(p => p.name == pageName);
 
+  app.init();  
   app.connect(ip)
     .then(() => {
       console.log("Connected!");

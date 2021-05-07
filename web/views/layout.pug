@@ -6,9 +6,28 @@ html(lang="en")
     title #{titleText}
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     meta#page-meta(name=data.page)
-    script(src='/bundle.js')
+
+    //-
+      link(rel="preload", href="roboto.css", as="style")
+      link(rel="preload", href="main.css", as="style")
+      link(rel="preload", href="icons/can.svg", as="image")
+      link(rel="preload", href="icons/map.svg", as="image")
+      link(rel="preload", href="icons/logs.svg", as="image")
+      link(rel="preload", href="icons/tick.svg", as="image")
+      link(rel="preload", href="fonts/roboto-latin-400.woff2", as="font", type="font/woff2")
+      link(rel="preload", href="fonts/roboto-latin-500.woff2", as="font", type="font/woff2")
+      link(rel="preload", href="fonts/roboto-latin-700.woff2", as="font", type="font/woff2")
+
+    link(rel="stylesheet", href="main.css")
+    link(rel="stylesheet", href="roboto.css")
+    link(rel="stylesheet", href="leaflet.css")
+    
+    script(src='/bundle.js', crossorigin="", defer)
   body
     include components/banner
+
+    div#overlay
+      //-span= "Loading"
 
     div#content
       h1= data.page

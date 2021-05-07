@@ -41,7 +41,7 @@ class GpsModule {
                 this.gps.update(data);
             }
             catch (err) {
-                Logger_1.default.info('GPS', "Error while parsing data, ignoring...");
+                Logger_1.default.warn('GPS', "Error while parsing data, ignoring...");
             }
             ;
         });
@@ -92,7 +92,7 @@ class GpsModule {
             if (distance <= 0.3 || distance >= 1000)
                 return;
             this.travelled += distance;
-            Logger_1.default.info('GPS', `Moved ${distance}m (total: ${this.travelled}m)`);
+            //Logger.info('GPS', `Moved ${distance}m (total: ${this.travelled}m)`);
             this.tripMetric.setValue(this.travelled);
         }
         this.lat = lat;

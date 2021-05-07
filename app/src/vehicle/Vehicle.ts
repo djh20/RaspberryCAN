@@ -2,18 +2,21 @@ import { EventEmitter } from "events";
 import CanModule, { CanPoint } from "./Can";
 import GpsModule from "./Gps";
 import Metric from "./Metric";
+import TripManager from "./TripManager";
 
 export default class Vehicle extends EventEmitter {
   public definition?: VehicleDefinition;
   public metrics: Map<string, Metric>;
   public can: CanModule;
   public gps?: GpsModule;
+  public tripManager: TripManager;
 
   constructor(definition?: VehicleDefinition) {
     super();
     this.definition = definition;
     this.metrics = new Map<string, Metric>();
     this.can = new CanModule(this);
+    this.tripManager = new TripManager();
   }
 
   public setDefinition(definition: VehicleDefinition) {

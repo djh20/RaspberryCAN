@@ -44,6 +44,13 @@ namespace FileSystem {
     });
   }
   
+  export function createDirectory(path: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      node_fs.mkdir(path, (err) => {
+        !err ? resolve(true) : resolve(false);
+      });
+    });
+  }
   
   export function readDirectory(params: ReadDirectoryParams): Promise<DirectoryData> {
     // if a directory is given, use path to get the full path

@@ -15,25 +15,33 @@ export default class App {
   public ws: WebSocketServer;
   public config: Config;
   public webApp: WebApplication;
+  public version: string;
 
-  private definitionsPath: string;
   private configPath: string;
+  private definitionsPath: string;
+  private storagePath: string;
+  private tripsPath: string;
 
-  constructor() {
+  constructor(version: string) {
     this.vehicle = new Vehicle();
     this.rootPath = p.resolve(__dirname, '../../../');
 
-    this.definitionsPath = p.resolve(this.rootPath, 'definitions');
     this.configPath = p.resolve(this.rootPath, 'config.json');
+    this.definitionsPath = p.resolve(this.rootPath, 'definitions');
+    this.storagePath = p.resolve(this.rootPath, 'storage');
+    this.tripsPath = p.resolve(this.storagePath, 'trips');
 
     this.config = new Config(this.configPath);
     this.ws = new WebSocketServer(this);
     this.webApp = new WebApplication(this);
     this.server = new HttpServer(this.webApp.expressApp);
+    this.version = version;
   }
 
   async start() {
     await this.config.load();
+    await FileSystem.createDirectory(this.storagePath);
+    await FileSystem.createDirectory(this.tripsPath);
 
     // TODO: move this connection logic into the vehicle class (under a connect() method).
     // this would allow multiple vehicles instances to be running at the same time.
@@ -54,6 +62,8 @@ export default class App {
       let connected = await this.vehicle.gps.connect(gpsPort);
       if (connected) this.vehicle.gps.listen();
     }
+
+    this.vehicle.tripManager.load(this.tripsPath);
 
     let port = this.config.data.port;
     this.server.listen(port, () => {
