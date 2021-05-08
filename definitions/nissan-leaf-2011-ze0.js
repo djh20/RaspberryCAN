@@ -2,6 +2,11 @@ module.exports = {
   id: 'nissan-leaf-2011-ze0',
   name: 'Nissan Leaf 2011 (ZE0)',
   getInfo: (metrics) => {
+    // This function is called by the application periodically to get information about the vehicle.
+
+    // Currently, the application only calls this to see if you're moving (for the gps).
+    // If you're not using a gps or don't have this information, you should just return {moving:true}.
+
     let info = {};
 
     let speed = metrics.get('rear_speed');
