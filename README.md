@@ -3,6 +3,8 @@ A Node.JS application for reading and displaying vehicle information using a lin
 
 Internally, this system is being used on a [Raspberry Pi Zero W](https://www.raspberrypi.org/products/raspberry-pi-zero-w/) and a 2011 Nissan Leaf.
 
+![Web Interface](/extra/webinterface.png "Web Interface")
+
 ## Installation
 Make sure you have Node.JS and NPM installed, then run:
 1. `npm i --production` to install the required dependencies.
