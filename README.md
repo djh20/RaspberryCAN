@@ -16,7 +16,7 @@ You can edit the config.json file to change the behaviour of the application. Al
 | port | number | 8080 | The port of the web interface and websocket. |
 | can_interface | string | can0 | The name of the linux CAN interface to use. |
 | definition | string | null | The vehicle CAN definition for the application to use. |
-| gps_port | string | null | The serial port of a GPS module (optional). |
+| gps_port | string | null | The serial port of a GPS module (still in development). |
 
 ## Other Information
 
