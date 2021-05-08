@@ -5,8 +5,9 @@
   box-sizing: border-box;
 }
 html, body { 
-  margin: 0; 
+  margin: 0;
   height: 100%;
+  overflow: hidden;
 }
 
 .banner {
@@ -105,6 +106,7 @@ html, body {
 }
 
 #content {
+  overflow: auto;
   padding: 20px;
   position: absolute;
   width: $content-width;

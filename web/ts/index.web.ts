@@ -5,7 +5,7 @@ import 'leaflet/dist/leaflet.css'
 import { Page } from './Page';
 import WebApp from './WebApp';
 import MetricsPage from './pages/MetricsPage';
-import MapPage from './pages/MapPage';
+import TripsPage from './pages/TripsPage';
 import LogsPage from './pages/LogsPage';
 
 const app = new WebApp();
@@ -15,7 +15,7 @@ const pageName = pageMeta.getAttribute('name');
 
 const pages: Page[] = [
   new MetricsPage(app),
-  new MapPage(app),
+  new TripsPage(app),
   new LogsPage(app)
 ];
 

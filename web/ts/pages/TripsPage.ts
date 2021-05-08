@@ -2,11 +2,11 @@ import { Page } from "../Page";
 import WebApp from "../WebApp";
 import { Map as LeafletMap, TileLayer, Polyline} from 'leaflet';
 
-export default class MapPage extends Page {
+export default class TripsPage extends Page {
   private map: LeafletMap;
 
   constructor(app: WebApp) {
-    super(app, 'map');
+    super(app, 'trips');
   }
 
   public async load() {

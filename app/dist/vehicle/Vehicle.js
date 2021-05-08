@@ -13,7 +13,7 @@ class Vehicle extends events_1.EventEmitter {
         this.definition = definition;
         this.metrics = new Map();
         this.can = new Can_1.default(this);
-        this.tripManager = new TripManager_1.default();
+        this.tripManager = new TripManager_1.default(this);
     }
     setDefinition(definition) {
         if (definition.can) {

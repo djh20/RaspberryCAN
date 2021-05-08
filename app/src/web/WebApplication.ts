@@ -20,8 +20,8 @@ export default class WebApplication {
         paths: ['/', '/metrics']
       },
       {
-        name: 'map',
-        paths: ['/map']
+        name: 'trips',
+        paths: ['/trips']
       },
       {
         name: 'settings',

@@ -26,7 +26,7 @@ export default class Config {
       this.data.name = file.json.name || "RaspberryCAN";
       this.data.port = file.json.port || 8080;
       this.data.canInterface = file.json.can_interface || 'can0';
-      this.data.canDefinition = file.json.can_definition || 'nissan-leaf-2011-ze0';
+      this.data.canDefinition = file.json.can_definition;
       this.data.gpsPort = file.json.gps_port;
 
       Logger.info('Config', "Loaded");

@@ -101,6 +101,7 @@ export default class GpsModule {
       //Logger.info('GPS', `Moved ${distance}m (total: ${this.travelled}m)`);
 
       this.tripMetric.setValue(this.travelled);
+      this.vehicle.tripManager.addWaypoint(lat, lon);
     }
 
     this.lat = lat;

@@ -1,5 +1,5 @@
 import { CanPoint } from "./Can";
-import Vehicle, { VehicleDefinition } from "./Vehicle";
+import Vehicle from "./Vehicle";
 
 export default class Metric {
   public value: number;

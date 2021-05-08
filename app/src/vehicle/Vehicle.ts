@@ -16,7 +16,7 @@ export default class Vehicle extends EventEmitter {
     this.definition = definition;
     this.metrics = new Map<string, Metric>();
     this.can = new CanModule(this);
-    this.tripManager = new TripManager();
+    this.tripManager = new TripManager(this);
   }
 
   public setDefinition(definition: VehicleDefinition) {

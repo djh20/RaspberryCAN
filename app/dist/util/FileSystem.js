@@ -24,16 +24,24 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const node_fs = __importStar(require("fs"));
+const nodeFS = __importStar(require("fs"));
 const p = __importStar(require("path"));
 var FileSystem;
 (function (FileSystem) {
+    function writeFile(path, data) {
+        return new Promise((resolve, reject) => {
+            nodeFS.writeFile(path, data, (err) => {
+                !err ? resolve(true) : resolve(false);
+            });
+        });
+    }
+    FileSystem.writeFile = writeFile;
     function readFile(params) {
         // if a directory is given, use path to get the full path
         if (params.dir)
             params.path = p.resolve(params.dir, params.path);
         return new Promise((resolve, reject) => {
-            node_fs.readFile(params.path, { encoding: params.encoding || 'utf-8' }, (err, data) => {
+            nodeFS.readFile(params.path, { encoding: params.encoding || 'utf-8' }, (err, data) => {
                 resolve({
                     data: data,
                     json: params.json && data ? JSON.parse(data) : undefined
@@ -44,7 +52,7 @@ var FileSystem;
     FileSystem.readFile = readFile;
     function createDirectory(path) {
         return new Promise((resolve, reject) => {
-            node_fs.mkdir(path, (err) => {
+            nodeFS.mkdir(path, (err) => {
                 !err ? resolve(true) : resolve(false);
             });
         });
@@ -55,7 +63,7 @@ var FileSystem;
         if (params.dir)
             params.path = p.resolve(params.dir, params.path);
         return new Promise((resolve, reject) => {
-            node_fs.readdir(params.path, (err, data) => {
+            nodeFS.readdir(params.path, (err, data) => {
                 let children = [];
                 for (let file_name of data) {
                     let path = p.resolve(params.path, file_name);

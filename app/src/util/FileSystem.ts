@@ -4,7 +4,7 @@ It's much better than the default module, as it features promisies,
 and it's just much easier to use overall.
 */
 
-import * as node_fs from 'fs';
+import * as nodeFS from 'fs';
 import * as p from 'path';
 
 namespace FileSystem {
@@ -30,12 +30,20 @@ namespace FileSystem {
     path: string;
   }
 
+  export function writeFile(path: string, data: string | NodeJS.ArrayBufferView): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      nodeFS.writeFile(path, data, (err) => {
+        !err ? resolve(true) : resolve(false);
+      });
+    });
+  }
+
   export function readFile(params: ReadFileParams): Promise<FileData> {
     // if a directory is given, use path to get the full path
     if (params.dir) params.path = p.resolve(params.dir, params.path);
 
     return new Promise((resolve, reject) => {
-      node_fs.readFile(params.path, {encoding: params.encoding || 'utf-8'}, (err, data) => {
+      nodeFS.readFile(params.path, {encoding: params.encoding || 'utf-8'}, (err, data) => {
         resolve({
           data: data,
           json: params.json && data ? JSON.parse(data) : undefined
@@ -46,7 +54,7 @@ namespace FileSystem {
   
   export function createDirectory(path: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      node_fs.mkdir(path, (err) => {
+      nodeFS.mkdir(path, (err) => {
         !err ? resolve(true) : resolve(false);
       });
     });
@@ -57,7 +65,7 @@ namespace FileSystem {
     if (params.dir) params.path = p.resolve(params.dir, params.path);
 
     return new Promise((resolve, reject) => {
-      node_fs.readdir(params.path, (err, data) => {
+      nodeFS.readdir(params.path, (err, data) => {
         let children: DirectoryChild[] = [];
         
         for (let file_name of data) {
