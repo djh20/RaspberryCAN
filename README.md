@@ -30,6 +30,11 @@ You can edit the config.json file to change the behaviour of the application. Al
 
 *Note: The project comes pre-compiled as the Raspberry Pi takes a long time to compile on it's own.*
 
+### Definitions
+The purpose of the [definitions](/definitions) folder is to tell the program how to understand CAN messages from different devices (mainly vehicles). This repo only contains one definition file (for the 2011 Nissan Leaf). You can create your own definition file and use it by changing the `definition` entry in the config.json file.
+
+Look at the [nissan-leaf-2011-ze0.js](/definitions/nissan-leaf-2011-ze0.js) definition file for some help in creating your own.
+
 ### My Setup
 I'm using a MCP2515 module for my CAN interface, you can find a diagram of my wiring setup [here](/extra/wiring.png). I used [this forum post](https://www.raspberrypi.org/forums/viewtopic.php?t=141052) to separate the 3.3v and 5v inputs (the extra pin on my diagram is the 5v input).
 
