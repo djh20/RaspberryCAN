@@ -50,7 +50,18 @@ export default class WebApplication {
 
     this.expressApp.get('/api/trips', (req, res) => {
       res.type('json');
-      res.send(this.app.vehicle.tripManager.trips);
+      let trips: string[] = this.app.vehicle.tripManager.trips.map(t => t.info.timeStart.toString());
+      res.send(trips);
+    });
+
+    this.expressApp.get('/api/trips/:name', (req, res) => {
+      let name = req.params.name;
+      let trip = this.app.vehicle.tripManager.trips.find(t => t.info.timeStart.toString() == name);
+      if (trip) {
+        res.status(200).send(trip.info);
+      } else {
+        res.sendStatus(404);
+      }
     });
 
     this.expressApp.get('/api/logs', (req, res) => {

@@ -45,6 +45,20 @@ class GpsModule {
             }
             ;
         });
+        this.statusMetric = this.vehicle.getMetric({
+            name: 'gps_status',
+            id: 254
+        });
+        this.tripMetric = this.vehicle.getMetric({
+            name: 'gps_trip_distance',
+            id: 255,
+            convert: (value) => new Uint16Array([value / 100])
+        });
+        this.vehicle.on('metricUpdated', (metric) => {
+            if (metric.point.name == 'charging' && metric.value == 1) {
+                this.reset();
+            }
+        });
         setInterval(() => this.update(), 3000);
         this.update();
     }
@@ -69,15 +83,6 @@ class GpsModule {
         let lat = this.gps.state.lat;
         let lon = this.gps.state.lon;
         this.locked = lat != null && lon != null;
-        this.statusMetric = this.vehicle.getMetric({
-            name: 'gps_status',
-            id: 254
-        });
-        this.tripMetric = this.vehicle.getMetric({
-            name: 'gps_trip_distance',
-            id: 255,
-            convert: (value) => new Uint16Array([value / 100])
-        });
         this.statusMetric.setValue(this.locked ? 1 : 0);
         if (!this.locked)
             return;
@@ -94,7 +99,7 @@ class GpsModule {
             this.travelled += distance;
             //Logger.info('GPS', `Moved ${distance}m (total: ${this.travelled}m)`);
             this.tripMetric.setValue(this.travelled);
-            this.vehicle.tripManager.addWaypoint(lat, lon);
+            //this.vehicle.tripManager.addWaypoint(lat, lon);
         }
         this.lat = lat;
         this.lon = lon;

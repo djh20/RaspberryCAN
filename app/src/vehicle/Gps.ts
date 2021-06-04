@@ -36,6 +36,23 @@ export default class GpsModule {
         Logger.warn('GPS', "Error while parsing data, ignoring...");
       };
     });
+    
+    this.statusMetric = this.vehicle.getMetric({
+      name:'gps_status', 
+      id:254
+    });
+
+    this.tripMetric = this.vehicle.getMetric({
+      name:'gps_trip_distance', 
+      id:255,
+      convert: (value) => new Uint16Array([value/100])
+    });
+
+    this.vehicle.on('metricUpdated', (metric: Metric) => {
+      if (metric.point.name == 'charging' && metric.value == 1) {
+        this.reset();
+      } 
+    });
 
     setInterval(() => this.update(), 3000);
     this.update();
@@ -65,17 +82,6 @@ export default class GpsModule {
 
     this.locked = lat != null && lon != null;
 
-    this.statusMetric = this.vehicle.getMetric({
-      name:'gps_status', 
-      id:254
-    });
-
-    this.tripMetric = this.vehicle.getMetric({
-      name:'gps_trip_distance', 
-      id:255,
-      convert: (value) => new Uint16Array([value/100])
-    });
-
     this.statusMetric.setValue(this.locked ? 1 : 0);
 
     if (!this.locked) return;
@@ -101,7 +107,7 @@ export default class GpsModule {
       //Logger.info('GPS', `Moved ${distance}m (total: ${this.travelled}m)`);
 
       this.tripMetric.setValue(this.travelled);
-      this.vehicle.tripManager.addWaypoint(lat, lon);
+      //this.vehicle.tripManager.addWaypoint(lat, lon);
     }
 
     this.lat = lat;
